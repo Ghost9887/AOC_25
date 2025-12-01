@@ -22,7 +22,7 @@ fn run(file_name: &str) -> Result<(), Box<dyn Error>>{
     let mut input_count = 50;
     
     for instruction in instructions {
-        println!("{input_count}");
+        //println!("{input_count}");
         let mut temp = parse_instruction(&instruction);
         loop {
             if temp > 0 {
