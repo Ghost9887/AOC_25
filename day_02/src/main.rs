@@ -1,7 +1,10 @@
 use day_02::{parse_input, check_if_valid};
-use std::{process, error::Error};
+use std::{process, error::Error, time::Instant};
 
 fn main() {
+    
+    let now = Instant::now();
+
     let file_name = "input.txt";
     
     let ranges = match parse_input(file_name) {
@@ -15,6 +18,9 @@ fn main() {
         eprintln!("Error: {e}");
         process::exit(1);
     }
+
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 }
 
 fn run(ranges: Vec<Vec<i64>>) -> Result<(), Box<dyn Error>> {
