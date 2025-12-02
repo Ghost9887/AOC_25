@@ -41,8 +41,6 @@ pub fn check_if_valid(number: i64) -> i64 {
 
     if string_number[0..string_number.len() / 2] == string_number[string_number.len() / 2..string_number.len()] {
         return number;
-    }else{
-        return 0;
     }
 
     let mut index = 1;
