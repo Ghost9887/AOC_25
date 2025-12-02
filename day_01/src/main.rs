@@ -1,13 +1,18 @@
-use std::{fs::read_to_string, process, error::Error};
+use std::{fs::read_to_string, process, error::Error, time::Instant};
 use day_01::parse_instruction;
 
 fn main() {
+    
+    let now = Instant::now();
+    
     let file_name = "input.txt";
     if let Err(e) = run(file_name) {
         eprintln!("Error: {e}");
         process::exit(1);
     }
 
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 }
 
 fn run(file_name: &str) -> Result<(), Box<dyn Error>>{
