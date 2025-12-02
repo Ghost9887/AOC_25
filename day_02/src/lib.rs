@@ -2,10 +2,10 @@ use std::{fs, error::Error};
 
 pub fn parse_input(file_name: &str) -> Result<Vec<Vec<i64>>, Box<dyn Error>>{
     let mut ranges: Vec<Vec<i64>> = Vec::new();
+    let mut range: Vec<i64> = Vec::new();
     let content = fs::read_to_string(file_name)?; 
     let mut starting_range = String::new();
     let mut ending_range = String::new();
-    let mut range: Vec<i64> = Vec::new();
     let mut switch = false;
 
     for char in content.chars() {
@@ -62,23 +62,20 @@ pub fn check_if_valid(number: i64) -> i64 {
                 return 0;
             }
             else {
-                index = pattern.len();
-                while index < string_number.len() {
-                    if pattern == &string_number[index..index + pattern.len()]{
-                        index += pattern.len();
-                    }
-                    else{
-                        return 0;
-                    }
+                let size = string_number.len() / pattern.len();
+                let mut temp = String::new();
+                for _ in 0..size{
+                    temp.push_str(&pattern);
+                }
+                if temp == string_number {
+                    return number;
+                }else {
+                    return 0;
                 }
             }
         }
     } 
-    if found_pattern {
-        number
-    }else {
-        0
-    }
+    0
 }
 
 #[cfg(test)]
