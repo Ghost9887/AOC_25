@@ -1,5 +1,5 @@
 use std::{process, time::Instant};
-use day_03::{parse_input, run_part_one};
+use day_03::{parse_input, run};
 
 fn main() {
     let now = Instant::now();
@@ -14,8 +14,7 @@ fn main() {
         }
     };
 
-    //println!("{:?}", banks);
-    let result = match run_part_one(banks) {
+    let result = match run(banks, 12) {
         Ok(n) => n,
         Err(e) => {
             eprintln!("{e}");

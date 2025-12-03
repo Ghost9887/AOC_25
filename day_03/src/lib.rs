@@ -1,14 +1,14 @@
 use std::{fs, error::Error};
 
-pub fn parse_input(file_name: &str) -> Result<Vec<Vec<i64>>, Box<dyn Error>>{
+pub fn parse_input(file_name: &str) -> Result<Vec<Vec<i8>>, Box<dyn Error>>{
 
-    let mut banks: Vec<Vec<i64>> = Vec::new();
+    let mut banks: Vec<Vec<i8>> = Vec::new();
     let content = fs::read_to_string(file_name)?;   
     
     for line in content.lines() {
-        let mut bank: Vec<i64> = Vec::new();
+        let mut bank: Vec<i8> = Vec::new();
         for char in line.chars() {
-            bank.push(char.to_string().parse::<i64>()?);
+            bank.push(char.to_string().parse::<i8>()?);
         }
         banks.push(bank);
     }
@@ -16,34 +16,44 @@ pub fn parse_input(file_name: &str) -> Result<Vec<Vec<i64>>, Box<dyn Error>>{
     Ok(banks)
 }
 
-pub fn run_part_one(banks: Vec<Vec<i64>>) -> Result<i64, Box<dyn Error>> {
-    
+pub fn run(banks: Vec<Vec<i8>>, count: usize) -> Result<i64, Box<dyn Error>> {
     let mut result: i64 = 0;
-    let mut first_number: i64;
-    let mut second_number: i64;
+    
     for bank in banks {
-        first_number = bank[0];
-        second_number = bank[1];
-        let mut index = 0;
-        while index < bank.len() {
-            if bank[index] > first_number && index + 1 < bank.len() {
-                first_number = bank[index];
-                second_number = 0;
+        let mut numbers: Vec<i8> = Vec::new();
+        let mut start_idx = 0;
+
+        for numbers_left in (0..count).rev() {
+            let mut highest_number = 0;
+            let mut highest_index = 0;
+            for (i, &value) in bank[start_idx..bank.len() - numbers_left].iter().enumerate() {
+                if value > highest_number {
+                    highest_number = value;
+                    highest_index = i;
+                }
             }
-            if index + 1 < bank.len() && bank[index + 1] > second_number {
-                second_number = bank[index + 1];
-            }   
-            index += 1;
+            numbers.push(highest_number);
+            start_idx += highest_index + 1;
         }
-        let temp = first_number * 10 + second_number;
-        println!("{temp}");
-        result += temp;
+        let temp = build_result(&numbers);
+        result += temp; 
     }
     Ok(result)
 }
 
-pub fn run_part_two(banks: Vec<Vec<i64>>) -> Result<i64, Box<dyn Error>> {
-    Ok(0)
+fn build_result(numbers: &Vec<i8>) -> i64 {
+    let mut index: usize = 0;
+    let mut mult: i64 = (numbers.len() - 1) as i64; 
+    let mut result: i64 = 0;
+
+    while index < numbers.len() - 1 {
+        result += (numbers[index] as i64) * (10_i64.pow(mult as u32));
+        mult -= 1;
+        index += 1;
+    }
+
+    result += numbers[numbers.len() - 1] as i64;
+    result
 }
 
 #[cfg(test)]
@@ -60,7 +70,7 @@ mod tests{
             vec![2,3,4,2,3,4,2,3,4,2,3,4,2,7,8], //78
             vec![8,1,8,1,8,1,9,1,1,1,1,2,1,1,1], //92
         ];
-        let result = match run_part_one(banks) {
+        let result = match run(banks, 2) {
             Ok(n) => n,
             Err(e) => {
                 eprintln!("{e}");
@@ -78,7 +88,7 @@ mod tests{
             vec![2,3,4,2,3,4,2,3,4,2,3,4,2,7,8], //434234234278
             vec![8,1,8,1,8,1,9,1,1,1,1,2,1,1,1], //888911112111
         ];
-        let result = match run_part_two(banks) {
+        let result = match run(banks, 12) {
             Ok(n) => n,
             Err(e) => {
                 eprintln!("{e}");
