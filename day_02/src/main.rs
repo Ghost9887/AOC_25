@@ -26,7 +26,6 @@ fn main() {
 fn run(ranges: Vec<Vec<i64>>) -> Result<(), Box<dyn Error>> {
     
     //println!("{:?}", ranges);
-
     let mut result = 0;
 
     for range in ranges {
@@ -36,7 +35,6 @@ fn run(ranges: Vec<Vec<i64>>) -> Result<(), Box<dyn Error>> {
             result += check_if_valid(number);
         }
     }
-
     println!("Result: {result}");
     Ok(())
 }

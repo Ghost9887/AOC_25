@@ -14,3 +14,8 @@ pub fn parse_instruction(instruction: &str) -> i32 {
     }
     number.parse::<i32>().unwrap()
 }
+
+#[cfg(test)]
+mod tests {
+    
+}

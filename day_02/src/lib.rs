@@ -1,6 +1,7 @@
 use std::{fs, error::Error};
 
 pub fn parse_input(file_name: &str) -> Result<Vec<Vec<i64>>, Box<dyn Error>>{
+
     let mut ranges: Vec<Vec<i64>> = Vec::new();
     let mut range: Vec<i64> = Vec::new();
     let content = fs::read_to_string(file_name)?; 
@@ -26,8 +27,8 @@ pub fn parse_input(file_name: &str) -> Result<Vec<Vec<i64>>, Box<dyn Error>>{
                 range.push(ending_range.parse::<i64>()?);
                 ranges.push(range);
                 range = Vec::new();
-                starting_range = String::new();
-                ending_range = String::new();
+                starting_range.clear();
+                ending_range.clear();
                 switch = false;
                 continue;
             }
@@ -37,6 +38,7 @@ pub fn parse_input(file_name: &str) -> Result<Vec<Vec<i64>>, Box<dyn Error>>{
 }
 
 pub fn check_if_valid(number: i64) -> i64 {
+
     let string_number = number.to_string();
 
     if string_number[0..string_number.len() / 2] == string_number[string_number.len() / 2..string_number.len()] {
@@ -44,7 +46,7 @@ pub fn check_if_valid(number: i64) -> i64 {
     }
 
     let mut index = 1;
-    let mut pattern = String::new();
+    let mut pattern = String::with_capacity(string_number.len() / 2 + 1);
     let mut found_pattern = false;
 
     while index < string_number.len() / 2 + 1 {
@@ -54,7 +56,7 @@ pub fn check_if_valid(number: i64) -> i64 {
                 found_pattern = true;
                 continue;
             }
-            pattern = String::new();
+            pattern.clear();
             index += 1;
         }
         else{
@@ -63,7 +65,7 @@ pub fn check_if_valid(number: i64) -> i64 {
             }
             else {
                 let size = string_number.len() / pattern.len();
-                let mut temp = String::new();
+                let mut temp = String::with_capacity(string_number.len());
                 for _ in 0..size{
                     temp.push_str(&pattern);
                 }
