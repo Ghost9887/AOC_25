@@ -35,7 +35,6 @@ pub fn check_neighbours(j: isize, i: isize, map: &Vec<Vec<i8>>) -> bool {
         (0, -1),
         (-1, -1),
     ];
-
     for (dj, di) in neighbours {
         let nj = j + dj;
         let ni = i + di;
@@ -52,11 +51,11 @@ pub fn check_neighbours(j: isize, i: isize, map: &Vec<Vec<i8>>) -> bool {
     found < 4
 }
 
-pub fn run(map: Vec<Vec<i8>>) -> Result<u32, Box<dyn Error>> {
+pub fn run_part_one(map: &Vec<Vec<i8>>) -> Result<u32, Box<dyn Error>> {
     let mut result: u32 = 0;
-    for (j, map_line) in map.iter().enumerate() {
-        for (i, number) in map_line.iter().enumerate() {
-            match number {
+    for j in 0..map.len() {
+        for i in 0..map[j].len() {
+            match map[j][i] {
                 0 => continue,
                 1 => {
                     let valid = check_neighbours(j as isize, i as isize, &map);
@@ -64,15 +63,34 @@ pub fn run(map: Vec<Vec<i8>>) -> Result<u32, Box<dyn Error>> {
                         result += 1;
                     }
                 }
-                _ => {
-                    return Err("Invalid input".into());
-                }
+                _ => return Err("Invalid input".into()),
             }
         }
-        //println!("{result}");
     }
     Ok(result)   
 }
+
+pub fn run_part_two(map: &mut Vec<Vec<i8>>) -> Result<u32, Box<dyn Error>> {
+    let mut new_map: Vec<Vec<i8>> = map.clone();
+    let mut result = 0;
+    for j in 0..map.len() {
+        for i in 0..map[j].len() {
+            match map[j][i] {
+                0 => continue,
+                1 => {
+                    let valid = check_neighbours(j as isize, i as isize, &map);
+                    if valid {
+                        new_map[j][i] = 0;
+                        result += 1;
+                    }
+                }
+                _ => return Err("Invalid input".into()),
+            }
+        }
+    }
+    *map = new_map.clone();
+    Ok(result)
+} 
 
 #[cfg(test)]
 mod tests {
@@ -93,8 +111,35 @@ mod tests {
             vec![0,1,1,1,1,1,1,1,1,0],
             vec![1,0,1,0,1,1,1,0,1,0],
         ];
-        let result = run(map).unwrap();
+        let result = run_part_one(&map).unwrap();
+        println!("Result: {result}");
         assert_eq!(result, 13);
+    }
+
+    #[test]
+    fn part_two() {
+        let mut map = vec![
+            vec![0,0,1,1,0,1,1,1,1,0],
+            vec![1,1,1,0,1,0,1,0,1,1],
+            vec![1,1,1,1,1,0,1,0,1,1],
+            vec![1,0,1,1,1,1,0,0,1,0],
+            vec![1,1,0,1,1,1,1,0,1,1],
+            vec![0,1,1,1,1,1,1,1,0,1],
+            vec![0,1,0,1,0,1,0,1,1,1],
+            vec![1,0,1,1,1,0,1,1,1,1],
+            vec![0,1,1,1,1,1,1,1,1,0],
+            vec![1,0,1,0,1,1,1,0,1,0],
+        ];
+        let mut new_result = 0;
+        loop {
+            let result = run_part_two(&mut map).unwrap();
+            if result < 1 {
+                break;
+            }else {
+                new_result += result;
+            }
+        }
+        assert_eq!(new_result, 43);
     }
 
 }
